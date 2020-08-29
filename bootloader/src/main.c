@@ -1,13 +1,20 @@
+#include <string.h>
+#include <mem_locations.h>
+#include <vga_io.h>
 
-
+const char* hello = "Hello From The C Bootloader";
 
 void boot_main(){
     
-    const short color = 0x0F00;
-    const char* hello = "Hello from C";
-    short* vga = (short*)0xb8000;
+       clear_screen();
+       puts(hello);
 
-    for (int i = 0; i < 12; i++){
-        vga[i+80] = color | hello[i];
-    }
+/*
+       vga_char filler;
+       filler.character = 'x';
+       filler.colour_bg = BLUE;
+       filler.colour_fg = WHITE;
+
+       fill_screen(filler);
+*/
 }
