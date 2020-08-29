@@ -78,8 +78,14 @@ start:
     ;save that value in memory for later
     mov [drive_num], dl
 
+    ;set video mode so that we know what we are writing to
     mov ah, 0x00
     mov al, 0x03
+    int 0x10
+
+    ;disable the cursor
+    mov ah, 0x01
+    mov ch, 0x3f
     int 0x10
 
     mov si, started_string
@@ -196,6 +202,7 @@ bios_mem_map:
     mov edx, 'SMAP'
 
     int 0x15
+    jc error
     or ebx, ebx
     jz .end
     add di, 20
@@ -228,7 +235,6 @@ BITS 32
 boot2:
 
 
-;print hello world
     mov esi, boot2_hello
     mov ebx, 0xb8000
 .loop:
