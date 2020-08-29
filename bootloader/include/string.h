@@ -7,4 +7,10 @@
 void memset(void* dst, uint8_t b, size_t sz);
 void memcpy(void* dst, const void* src, size_t sz);
 
+
+uint32_t strlen(char* str);
+void strreverse(char* str);
+void strcpy(char* dst, char* src);
+
+
 #endif

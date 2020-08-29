@@ -7,8 +7,17 @@
 
 
 vga_char* screen_ptr = (vga_char*)VGA_START;
-uint8_t foreground_colour = WHITE;
-uint8_t background_colour = BLUE;
+uint8_t foreground_colour = LIGHT_GRAY;
+uint8_t background_colour = BLACK;
+
+void set_foreground(uint8_t colour){
+    foreground_colour = colour;
+}
+
+void set_background(uint8_t colour){
+    background_colour = colour;
+}
+
 
 void fill_screen(vga_char c){
     //iterate throughout the entire vga array
@@ -20,8 +29,8 @@ void fill_screen(vga_char c){
 void clear_screen(){
     vga_char c;
     c.character = ' ';
-    c.colour_fg = WHITE;
-    c.colour_bg = BLACK;
+    c.colour_fg = foreground_colour;
+    c.colour_bg = background_colour;
     fill_screen(c);
 
     screen_ptr = (vga_char*)VGA_START;
@@ -33,7 +42,7 @@ void newline(){
     screen_ptr = (vga_char*)ptr;
 }
 
-void putc(char c){
+void b_putc(char c){
     vga_char vc;
     
     vc.character = c;
@@ -45,19 +54,23 @@ void putc(char c){
     screen_ptr++;
 }
 
-void puts(const char* s){
+void b_puts(const char* s){
 
     const char* ptr = s;
-
-    vga_char* it = screen_ptr;
 
     char c = *ptr++;
     while(c != '\0'){
 
-        it->character = c;
-        it += 1;
-
-        c = *ptr++;
+        switch (c)
+        {
+        case '\n':
+        case '\r':
+            newline();
+            break;        
+        default:
+            b_putc(c);
+            break;
+        }
+         c = *ptr++;
     }
-
 }

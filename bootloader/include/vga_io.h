@@ -30,7 +30,7 @@ typedef struct __attribute__((__packed__)){
 
 void fill_screen(vga_char);
 void clear_screen();
-void putc(char);
-void puts(const char*);
+void b_putc(char);
+void b_puts(const char*);
 
 #endif
