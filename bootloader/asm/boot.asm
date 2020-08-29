@@ -197,9 +197,9 @@ bios_mem_map:
     mov ax, 0x0050
     mov es, ax
 
-    mov eax, 0xE820
+    mov eax, 0x0000E820
     mov ecx, 20
-    mov edx, 'SMAP'
+    mov edx, 0x534D4150
 
     int 0x15
     jc error
