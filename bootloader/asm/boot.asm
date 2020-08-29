@@ -1,6 +1,13 @@
 BITS 16
 
-ORG 0x7C00
+global boot
+
+extern boot_main
+
+
+section .boot
+
+boot:
 
     cli
 
@@ -27,6 +34,7 @@ vars:
     stage2_loaded: db "The Bootloader has loaded stage 2", 0
     got_memory_map: db "Retrieved Bios Memory Map", 0
     a20_enabled: db "A20 address line enabled", 0
+    boot2_hello: db "Boot 2 has successfully started running",0
 
     error_message: db "An Error has occured", 0
 
@@ -221,21 +229,31 @@ boot2:
 
 
 ;print hello world
-    mov esi, hello
+    mov esi, boot2_hello
     mov ebx, 0xb8000
 .loop:
     lodsb
     or al, al
-    jz .halt
+    jz .end
     or eax, 0x0100
     mov word [ebx], ax
     add ebx, 2
     jmp .loop
 
-.halt:
+.end:
+
+    ;readjust the stack for the bootloader main call
+    mov esp, kernel_stack_top
+    call boot_main
+
+bootloader_halt:
     cli
     hlt
 
-hello: db "Hello, World!",0
+section .bss
 
-times (1024*64)-($-$$) db 0
+align 4
+
+kernel_stack_bottom: equ $
+    resb 16*1024
+kernel_stack_top:
