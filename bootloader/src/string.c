@@ -126,8 +126,8 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
         uint32_t fmt_type;
 
         //not the start of a fmt string
-        if(*fmt != '%'){
-            *dst++ = *fmt++;
+        if(*fmt++ != '%'){
+            *dst++ = *(fmt-1);
             chars_written++;
             continue;
         }

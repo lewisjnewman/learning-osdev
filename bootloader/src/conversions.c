@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include <string.h>
+#include <div.h>
 
 //int32_to_str
 //uint32_to_str
@@ -69,9 +70,9 @@ void int64_to_str(int64_t val, char* str){
     }
 
     while(val != 0){
-        int64_t digit = val % 10;
+        int64_t digit = mod_i64(val, 10);
         *str++ = digit + '0';
-        val /= 10;
+        val = div_i64(val, 10);
     }
 
     *str++ = '\0';
@@ -88,9 +89,9 @@ void uint64_to_str(uint64_t val, char* str){
     }
 
     while(val != 0){
-        uint64_t digit = val % 10;
+        uint64_t digit = mod_u64(val, 10);
         *str++ = digit + '0';
-        val /= 10;
+        val = div_u64(val, 10);
     }
 
     *str++ = '\0';

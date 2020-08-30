@@ -12,5 +12,7 @@ uint32_t strlen(char* str);
 void strreverse(char* str);
 void strcpy(char* dst, char* src);
 
+uint32_t b_sprintf(char* dst, const char* fmt, ...);
+
 
 #endif
