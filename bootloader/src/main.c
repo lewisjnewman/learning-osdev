@@ -10,7 +10,7 @@ void boot_main(){
 
        char buf[1024];
 
-       b_sprintf(buf, "%s", "Testing Format Strings");
+       b_sprintf(buf, "0x%d", 0x41414141);
 
        b_puts(buf);
 }

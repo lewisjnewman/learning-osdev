@@ -33,4 +33,12 @@ void clear_screen();
 void b_putc(char);
 void b_puts(const char*);
 
+/*
+uint32_t get_cursor_x();
+uint32_t get_cursor_y();
+void set_cursor_x(uint32_t);
+void set_cursor_y(uint32_t);
+void set_cursor(uint32_t, uint32_t);
+*/
+
 #endif
