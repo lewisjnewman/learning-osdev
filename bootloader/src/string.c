@@ -33,7 +33,8 @@ uint32_t strlen(char* str){
 void strreverse(char* str){
     uint32_t size = strlen(str);
 
-    uint32_t start = 0; uint32_t end = size-1;
+    uint32_t start = 0;
+    uint32_t end = size-1;
     while(start < end){
         char tmp = str[start];
         str[start] = str[end];
@@ -142,6 +143,7 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
             char c;
             int32_t integer;
             uint32_t uinteger;
+            uint32_t uinteger_h;
             int64_t linteger;
             uint64_t ulinteger;
             //float floating_point;
@@ -160,12 +162,14 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 str = va_arg(args, const char*);
                 while(*str != '\0'){
                     *dst++ = *str++;
+                    chars_written++;
                 }
                 break;
 
             case FMT_CHAR:
                 c = va_arg(args, int);
                 *dst++ = c;
+                chars_written++;
                 break;
 
             case FMT_INT:
@@ -173,6 +177,7 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 int32_to_str(integer, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }
                 break;
                 
@@ -181,6 +186,7 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 uint32_to_str(uinteger, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }
                 break;
 
@@ -189,14 +195,16 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 int64_to_str(linteger, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }
                 break;
 
             case FMT_ULONG:
                 ulinteger = va_arg(args, int64_t);
-                int32_to_str(ulinteger, str_buf);
+                uint64_to_str(ulinteger, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }
                 break;
 
@@ -215,14 +223,18 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 bits32_to_hex(uinteger, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }                
                 break;
 
             case FMT_LHEX:
-                ulinteger = va_arg(args, uint64_t);
-                bits64_to_hex(uinteger, str_buf);
+                uinteger = va_arg(args, uint32_t);
+                uinteger_h = va_arg(args, uint32_t);
+                ulinteger = ((uint64_t)uinteger_h<<32) | uinteger;
+                bits64_to_hex(ulinteger, str_buf);
                 for(it = 0; it < strlen(str_buf); it++){
                     *dst++ = str_buf[it];
+                    chars_written++;
                 }       
                 break;
 
@@ -232,6 +244,8 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
                 return -1;
         }
     }
+
+    *dst++ = '\0';
 
     va_end(args);
     return chars_written;
