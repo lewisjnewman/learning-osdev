@@ -6,7 +6,8 @@
 #include "vga_io.h"
 
 
-vga_char* screen_ptr = (vga_char*)VGA_START;
+vga_char* vga_base = (vga_char*)VGA_START;
+uint32_t char_index = 0;
 uint8_t foreground_colour = LIGHT_GRAY;
 uint8_t background_colour = BLACK;
 
@@ -37,13 +38,11 @@ void clear_screen(){
     c.colour_bg = background_colour;
     fill_screen(c);
 
-    screen_ptr = (vga_char*)VGA_START;
+    char_index = 0;
 }
 
 void newline(){
-    size_t ptr = (size_t)screen_ptr;
-    ptr = ptr - (ptr%VGA_LINE) + VGA_LINE;
-    screen_ptr = (vga_char*)ptr;
+    char_index = (char_index/TERM_WIDTH)+TERM_WIDTH;
 }
 
 void b_putc(char c){
@@ -53,9 +52,7 @@ void b_putc(char c){
     vc.colour_fg = foreground_colour;
     vc.colour_bg = background_colour;
     
-    *screen_ptr = vc;
-
-    screen_ptr++;
+    vga_base[char_index++] = vc;
 }
 
 void b_puts(const char* s){
