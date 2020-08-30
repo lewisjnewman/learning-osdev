@@ -33,6 +33,7 @@ vars:
     started_string: db "The Bootloader has started Running", 0
     stage2_loaded: db "The Bootloader has loaded stage 2", 0
     got_memory_map: db "Retrieved Bios Memory Map", 0
+    got_all_memory_maps: db "Retrieved All Bios Memory Maps", 0
     a20_enabled: db "A20 address line enabled", 0
     boot2_hello: db "Boot 2 has successfully started running",0
 
@@ -102,7 +103,7 @@ start:
     ;get a memory map from the bios
     call bios_mem_map
 
-    mov si, got_memory_map
+    mov si, got_all_memory_maps
     call puts
     call newline
 
@@ -189,23 +190,24 @@ load_stage2:
 bios_mem_map:
     pusha
 
-    mov di, 0x0000
+    mov di, 0x0500
     xor ebx, ebx
 
 .loop:
 
-    mov ax, 0x0050
-    mov es, ax
-
     mov eax, 0x0000E820
-    mov ecx, 20
+    mov ecx, 24
     mov edx, 0x534D4150
 
     int 0x15
     jc error
     or ebx, ebx
     jz .end
-    add di, 20
+    add di, 24
+
+    mov si, got_memory_map
+    call puts
+    call newline
 
     jmp .loop
 .end:
@@ -233,8 +235,6 @@ dw 0xaa55
 BITS 32
 
 boot2:
-
-
     mov esi, boot2_hello
     mov ebx, 0xb8000
 .loop:
