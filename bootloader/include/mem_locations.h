@@ -22,7 +22,7 @@
 #define VGA_SIZE    (VGA_END-VGA_START+1)
 
 //size in bytes of a vga line
-#define VGA_LINE   0xA0
+#define VGA_LINE   80*2
 
 
 #endif
