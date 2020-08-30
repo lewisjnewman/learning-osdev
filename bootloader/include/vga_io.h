@@ -32,6 +32,7 @@ void fill_screen(vga_char);
 void clear_screen();
 void b_putc(char);
 void b_puts(const char*);
+void newline();
 
 /*
 uint32_t get_cursor_x();

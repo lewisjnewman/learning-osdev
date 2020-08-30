@@ -42,7 +42,7 @@ void clear_screen(){
 }
 
 void newline(){
-    char_index = (char_index/TERM_WIDTH)+TERM_WIDTH;
+    char_index = char_index-(char_index%TERM_WIDTH)+TERM_WIDTH;
 }
 
 void b_putc(char c){
