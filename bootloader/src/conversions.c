@@ -109,6 +109,32 @@ void uint64_to_str(uint64_t val, char* str){
 
 char hex_digit_table[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
+void bits8_to_hex(uint8_t val, char* str){
+    char* str_start = str;
+    for(uint8_t i = 0; i < sizeof(uint8_t); i++){
+        *str++ = hex_digit_table[val&0xF];
+        val = val >> 4;
+
+        *str++ = hex_digit_table[val&0xF];
+        val = val >> 4;
+    }
+    *str++ = '\0';
+    strreverse(str_start);
+}
+
+void bits16_to_hex(uint16_t val, char* str){
+    char* str_start = str;
+    for(uint16_t i = 0; i < sizeof(uint16_t); i++){
+        *str++ = hex_digit_table[val&0xF];
+        val = val >> 4;
+
+        *str++ = hex_digit_table[val&0xF];
+        val = val >> 4;
+    }
+    *str++ = '\0';
+    strreverse(str_start);
+}
+
 void bits32_to_hex(uint32_t val, char* str){
     char* str_start = str;
     for(uint32_t i = 0; i < sizeof(uint32_t); i++){
@@ -118,6 +144,7 @@ void bits32_to_hex(uint32_t val, char* str){
         *str++ = hex_digit_table[val&0xF];
         val = val >> 4;
     }
+    *str++ = '\0';
     strreverse(str_start);
 }
 
@@ -131,5 +158,6 @@ void bits64_to_hex(uint64_t val, char* str){
         *str++ = hex_digit_table[val&0xF];
         val = val >> 4;
     }
+    *str++ = '\0';
     strreverse(str_start);
 }
