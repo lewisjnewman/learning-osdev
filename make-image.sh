@@ -14,3 +14,15 @@ dd if=./bootloader/bootloader.bin of=./disk.img conv=notrunc bs=512 count=1
 
 #put the rest of the bootloader starting a sector 2048
 dd if=./bootloader/bootloader.bin of=./disk.img conv=notrunc bs=512 skip=1 seek=2048
+
+#create empty file for root filesystem
+dd if=/dev/zero of=./root.fs bs=512 count=520159
+
+#create ext2 filesystem for root partition
+mkfs.ext2 ./root.fs
+
+#copy ext2 filesystem into disk.img
+dd if=./root.fs of=./disk.img conv=notrunc bs=512 seek=4096
+
+#cleanup
+rm root.fs
