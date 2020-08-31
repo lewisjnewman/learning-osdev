@@ -115,6 +115,9 @@ start:
     call puts
     call newline
 
+    ;clear interrupts before we load the gdt
+    cli
+
     ;load the gdt
     lgdt [gdt_pointer]
     mov eax, cr0
