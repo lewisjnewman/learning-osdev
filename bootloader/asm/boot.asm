@@ -63,7 +63,7 @@ vars:
     dap: ;disk address packet (for loading stage2)
         db 0x10         ;size of dap
         db 0x00         ;unused padding
-        dw 0x004F       ;sectors to read 63.5 kb
+        dw 0x0050       ;sectors to read 64 kb
         dw 0x7E00       ;offset of memory address to read to  
         dw 0x0000       ;segment of memory address to read to
         dq 0x00000800   ;disk sector to start at
@@ -89,7 +89,12 @@ start:
     call puts
     call newline
 
+    ;load the second stage of the bootloader into memory using 6 64kb reads (384kb)
+    mov cx, 6
+.loop:
     call load_stage2
+    call adjust_dap
+    loop .loop
 
     mov si, stage2_loaded
     call puts
@@ -181,6 +186,25 @@ load_stage2:
     int 0x13
 
     jc error
+
+    popa
+    ret
+
+adjust_dap:
+    pusha
+
+    ;increment the segment register to write to new memory
+    mov si, dap
+    add si, 6
+    mov ax, [si]
+    add ax, 0x1000
+    mov [si], ax
+
+    ;increment the starting disk sector
+    add si, 2
+    mov ax, [si]
+    add ax, 128
+    mov [si], ax
 
     popa
     ret
