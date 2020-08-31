@@ -1,6 +1,6 @@
 
 nasm ./asm/boot.asm -f elf32 -o boot.o
-nasm ./asm/io.asm -f elf32 -o io.o
+nasm ./asm/utils.asm -f elf32 -o utils.o
 
 
 clang \
