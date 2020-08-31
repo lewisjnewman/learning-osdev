@@ -3,6 +3,7 @@
 #include <vga_io.h>
 #include <bios_map.h>
 #include <allocator.h>
+#include <drivers/ata.h>
 
 #define BOOTLOADER_ALLOCATOR_SIZE 32*1024*1024
 
@@ -26,7 +27,6 @@ void print_bios_memory_maps(){
 
         i++;
     }
-    b_puts("\n");
 }
 
 void setup_memory(){
@@ -38,7 +38,7 @@ void setup_memory(){
         i++;
     }
 
-    uint32_t allocator_size = list[i].map_size;
+    uint64_t allocator_size = list[i].map_size;
 
     if(allocator_size > BOOTLOADER_ALLOCATOR_SIZE){
         allocator_size = BOOTLOADER_ALLOCATOR_SIZE;
@@ -46,7 +46,7 @@ void setup_memory(){
 
     char output_buf[80];
 
-    b_sprintf(output_buf, "Creating Allocator At 0x%lx Size %lu\n", list[i].base_address, list[i].map_size);
+    b_sprintf(output_buf, "Creating Allocator At 0x%lx Size %lu\n", list[i].base_address, allocator_size);
     b_puts(output_buf);
 
     init_allocator((void*)list->base_address, list->map_size);
@@ -56,7 +56,7 @@ void boot_main(){
 
     clear_screen();
 
-    b_puts("Hello From The C Bootloader\n\n");
+    b_puts("Hello From The C Bootloader\n");
 
     //print out the bios memory maps
     print_bios_memory_maps();
@@ -64,5 +64,17 @@ void boot_main(){
     //setup the memory allocator
     setup_memory();
 
-    b_puts("Memory Allocator Created");
+    b_puts("Memory Allocator Created\n");
+    b_puts("Reading First Sector\n");
+
+    uint8_t* mbr = (uint8_t*)allocate_mem(512);
+
+    ATA_PIO_read_sectors(mbr, 0, 1);
+
+    char* str_buf = (char*)allocate_mem(4096);
+
+    hexdump16((uint16_t*)mbr, str_buf, 384);
+
+    b_puts(str_buf);
+    newline();
 }
