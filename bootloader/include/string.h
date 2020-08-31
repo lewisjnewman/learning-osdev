@@ -14,5 +14,9 @@ void strcpy(char* dst, char* src);
 
 uint32_t b_sprintf(char* dst, const char* fmt, ...);
 
+void hexdump8(uint8_t* buffer, char* str_buf, size_t size);
+void hexdump16(uint16_t* buffer, char* str_buf, size_t size);
+void hexdump32(uint32_t* buffer, char* str_buf, size_t size);
+void hexdump64(uint64_t* buffer, char* str_buf, size_t size);
 
 #endif

@@ -250,3 +250,71 @@ uint32_t b_sprintf(char* dst, const char* fmt, ...){
     va_end(args);
     return chars_written;
 }
+
+void hexdump8(uint8_t* buffer, char* str_buf, size_t size){
+
+    char* str_it = str_buf;
+
+    for(uint8_t i = 0; i < size/sizeof(uint8_t); i++){
+        bits8_to_hex(buffer[i], str_it);
+        str_it += sizeof(uint8_t)*2;
+        if((i+1) % 24 != 0){
+            *str_it++ = ' ';
+        }
+        else{
+            *str_it++ = '\n';
+        }
+    }
+    *str_it = '\0';
+}
+
+void hexdump16(uint16_t* buffer, char* str_buf, size_t size){
+
+    char* str_it = str_buf;
+
+    for(uint16_t i = 0; i < size/sizeof(uint16_t); i++){
+        bits16_to_hex(buffer[i], str_it);
+        str_it += sizeof(uint16_t)*2;
+        if((i+1) % 16 != 0){
+            *str_it++ = ' ';
+        }
+        else{
+            *str_it++ = '\n';
+        }
+    }
+    *str_it = '\0';
+}
+
+void hexdump32(uint32_t* buffer, char* str_buf, size_t size){
+
+    char* str_it = str_buf;
+
+    for(uint32_t i = 0; i < size/sizeof(uint32_t); i++){
+        bits32_to_hex(buffer[i], str_it);
+        str_it += sizeof(uint32_t)*2;
+        if((i+1) % 8 != 0){
+            *str_it++ = ' ';
+        }
+        else{
+            *str_it++ = '\n';
+        }
+    }
+    *str_it = '\0';
+}
+
+void hexdump64(uint64_t* buffer, char* str_buf, size_t size){
+
+    char* str_it = str_buf;
+
+    for(uint64_t i = 0; i < size/sizeof(uint64_t); i++){
+        bits64_to_hex(buffer[i], str_it);
+        str_it += sizeof(uint64_t)*2;
+        if((i+1) % 4 != 0){
+            *str_it++ = ' ';
+        }
+        else{
+            *str_it++ = '\n';
+        }
+    }
+    *str_it = '\0';
+}
