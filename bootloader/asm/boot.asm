@@ -32,10 +32,6 @@ vars:
     
     started_string: db "The Bootloader has started Running", 0
     stage2_loaded: db "The Bootloader has loaded stage 2", 0
-    got_memory_map: db "Retrieved Bios Memory Map", 0
-    got_all_memory_maps: db "Retrieved All Bios Memory Maps", 0
-    a20_enabled: db "A20 address line enabled", 0
-    boot2_hello: db "Boot 2 has successfully started running",0
 
     error_message: db "An Error has occured", 0
 
@@ -70,7 +66,7 @@ vars:
         dw 0x004F       ;sectors to read 63.5 kb
         dw 0x7E00       ;offset of memory address to read to  
         dw 0x0000       ;segment of memory address to read to
-        dq 0x00000001   ;disk sector to start at
+        dq 0x00000800   ;disk sector to start at
 start:
     ;x86 cpu starts in 16bit mode
     ;this bootloader program is loaded at 0x7c00
@@ -229,6 +225,20 @@ error:
     cli
     hlt
 
+;fill out to where the dos partition table would be (signifify this drive as gpt)
+times 0x01BE-($-$$) db 0x00
+part_entry_one:
+    db 0x80         ;active partition
+    db 0x00         ;chs address of first sector:   head
+    db 0x01         ;                               sector
+    db 0x00         ;                               cylinder
+    db 0xEE         ;partition type
+    db 0xFF         ;chs address of last sector:    head
+    db 0xFF         ;                               sector
+    db 0xFF         ;                               cylinder
+    dd 0x00         ;first sector lba
+    dd 524288       ;last sector lba
+
 ;fill out to 512 bytes and add the signature bytes to identify this as a mbr
 times 510-($-$$) db 0x00
 dw 0xaa55
@@ -258,6 +268,13 @@ boot2:
 bootloader_halt:
     cli
     hlt
+
+
+boot2_hello: db "Boot 2 has successfully started running",0
+got_memory_map: db "Retrieved Bios Memory Map", 0
+got_all_memory_maps: db "Retrieved All Bios Memory Maps", 0
+a20_enabled: db "A20 address line enabled", 0
+
 
 section .bss
 
